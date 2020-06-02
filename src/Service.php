@@ -12,6 +12,8 @@ use GuzzleHttp\Client;
  */
 class Service
 {
+    const TYPE_TOPUP = 1;
+    const TYPE_DOWNLOAD_SOFTPIN = 2;
 
     /**
      * @var Client
@@ -82,7 +84,7 @@ class Service
             ]);
 
             if ($response->errorCode != 0) {
-                return $this->getResponseServiceError();
+                return $this->getResponseServiceError($response);
             }
 
             return [
@@ -94,7 +96,80 @@ class Service
                 ]
             ];
         } catch (\Exception $ex) {
-            return $this->getResponseServerError();
+            return $this->getResponseServerError($ex->getMessage());
+        }
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function topup(array $params = [])
+    {
+        try {
+            $requestId = $this->partnerUserName . '_' . time() . rand(000, 999);
+
+            $data = [
+                'requestId' => $requestId,
+                'partnerName' => $this->partnerUserName,
+                'provider' => $params['provider'],
+                'account' => $params['account'],
+                'amount' => $params['amount'],
+                'sign' => $this->sign($requestId
+                    . $this->partnerUserName
+                    . $params['provider']
+                    . $params['account']
+                    . $params['amount']
+                )
+            ];
+
+            $response = $this->service->__soapCall("topup", $data);
+
+            if ($response->errorCode != 0) {
+                return $this->getResponseServiceError($response);
+            }
+
+            return [
+                'data' => [
+                    'requestId' => $requestId,
+                    'partnerName' => $this->partnerUserName,
+                    'provider' => $params['provider'],
+                    'account' => $params['account'],
+                    'amount' => $params['amount']
+                ]
+            ];
+        } catch (\Exception $ex) {
+            return $this->getResponseServerError($ex->getMessage());
+        }
+    }
+
+
+    /**
+     * @param $requestId
+     * @param int $type
+     * @return array
+     */
+    public function checkTrans($requestId, $type = 1)
+    {
+        try {
+            $data = [
+                'requestId' => $requestId,
+                'partnerName' => $this->partnerUserName,
+                'type' => $type,
+                'sign' => $this->sign($requestId . $this->partnerUserName . $type)
+            ];
+
+            $response = $this->service->__soapCall("checkTrans", $data);
+
+            if ($response->errorCode != 0) {
+                return $this->getResponseServiceError($response);
+            }
+
+            return [
+                'data' => []
+            ];
+        } catch (\Exception $ex) {
+            return $this->getResponseServerError($ex->getMessage());
         }
     }
 

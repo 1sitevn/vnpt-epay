@@ -48,9 +48,64 @@ class ServiceTest extends TestCase
     {
         $response = $this->service->queryBalance();
 
-        var_dump(1, $response);
-        exit;
+        echo "\n" . json_encode($response);
 
-        $this->assertTrue(true);
+        if (isset($response['error'])) {
+            return $this->assertTrue(false);
+        }
+
+        return $this->assertTrue(true);
+    }
+
+    /**
+     * PHPUnit test: vendor/bin/phpunit --filter testTopup tests/ServiceTest.php
+     */
+    public function testTopup()
+    {
+        $response = $this->service->topup([
+            'provider' => Provider::TYPE_VIETTEL,
+            'account' => '01676696055',
+            'amount' => 100000
+        ]);
+
+        echo "\n" . json_encode($response);
+
+        if (isset($response['error'])) {
+            return $this->assertTrue(false);
+        }
+
+        return $this->assertTrue(true);
+    }
+
+    /**
+     * PHPUnit test: vendor/bin/phpunit --filter testCheckTransSuccess tests/ServiceTest.php
+     */
+    public function testCheckTransSuccess()
+    {
+        $response = $this->service->checkTrans('partnerTest_PHP_1591088750221', Service::TYPE_TOPUP);
+
+        echo "\n" . json_encode($response);
+
+        if (isset($response['error'])) {
+            return $this->assertTrue(false);
+        }
+
+        return $this->assertTrue(true);
+    }
+
+    /**
+     * PHPUnit test: vendor/bin/phpunit --filter testCheckTransFail tests/ServiceTest.php
+     */
+    public function testCheckTransFail()
+    {
+        $response = $this->service->checkTrans('partnerTest_PHP_191293241189', Service::TYPE_TOPUP);
+
+        echo "\n" . json_encode($response);
+
+        if (isset($response['error'])) {
+            return $this->assertTrue(true);
+        }
+
+        return $this->assertTrue(false);
     }
 }
