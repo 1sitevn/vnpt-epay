@@ -78,6 +78,42 @@ class ServiceTest extends TestCase
     }
 
     /**
+     * PHPUnit test: vendor/bin/phpunit --filter testDownloadSoftpin tests/ServiceTest.php
+     */
+    public function testDownloadSoftpin()
+    {
+        $response = $this->service->downloadSoftpin([
+            'provider' => Provider::TYPE_VIETTEL,
+            'amount' => 10000,
+            'quantity' => 2
+        ]);
+
+        echo "\n" . json_encode($response);
+
+        if (isset($response['error'])) {
+            return $this->assertTrue(false);
+        }
+
+        return $this->assertTrue(true);
+    }
+
+    /**
+     * PHPUnit test: vendor/bin/phpunit --filter testReDownloadSoftpin tests/ServiceTest.php
+     */
+    public function testReDownloadSoftpin()
+    {
+        $response = $this->service->reDownloadSoftpin('partnerTest_PHP_1591109500887');
+
+        echo "\n" . json_encode($response);
+
+        if (isset($response['error'])) {
+            return $this->assertTrue(true);
+        }
+
+        return $this->assertTrue(false);
+    }
+
+    /**
      * PHPUnit test: vendor/bin/phpunit --filter testCheckTransSuccess tests/ServiceTest.php
      */
     public function testCheckTransSuccess()

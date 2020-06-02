@@ -2,10 +2,6 @@
 
 namespace OneSite\VNPT\EPay;
 
-
-use GuzzleHttp\Client;
-
-
 /**
  * Class Service
  * @package OneSite\VNPT\EPay
@@ -14,11 +10,6 @@ class Service
 {
     const TYPE_TOPUP = 1;
     const TYPE_DOWNLOAD_SOFTPIN = 2;
-
-    /**
-     * @var Client
-     */
-    private $client;
 
     /**
      * @var array|mixed|null
@@ -60,8 +51,6 @@ class Service
      */
     public function __construct()
     {
-        $this->client = new Client();
-
         $this->wsUrl = Config::get('vnpt.epay.ws_url');
         $this->partnerUserName = Config::get('vnpt.epay.partner_username');
         $this->partnerPassword = Config::get('vnpt.epay.partner_password');
@@ -131,8 +120,8 @@ class Service
 
             return [
                 'data' => [
-                    'requestId' => $requestId,
-                    'partnerName' => $this->partnerUserName,
+                    'request_id' => $requestId,
+                    'partner_name' => $this->partnerUserName,
                     'provider' => $params['provider'],
                     'account' => $params['account'],
                     'amount' => $params['amount']
@@ -143,6 +132,109 @@ class Service
         }
     }
 
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function downloadSoftpin(array $params = [])
+    {
+        try {
+            $requestId = $this->partnerUserName . '_' . time() . rand(000, 999);
+
+            $data = [
+                'requestId' => $requestId,
+                'partnerName' => $this->partnerUserName,
+                'provider' => $params['provider'],
+                'amount' => $params['amount'],
+                'quantity' => $params['quantity'],
+                'sign' => $this->sign($requestId
+                    . $this->partnerUserName
+                    . $params['provider']
+                    . $params['amount']
+                    . $params['quantity']
+                )
+            ];
+
+            $response = $this->service->__soapCall("downloadSoftpin", $data);
+
+            if ($response->errorCode != 0) {
+                return $this->getResponseServiceError($response);
+            }
+
+            $listCards = $this->decrypt($response->listCards);
+            $listCards = json_decode($listCards);
+            $listCards = !empty($listCards->listCards) ? $listCards->listCards : [];
+            $listCards = $this->getCardInfo($listCards);
+
+            return [
+                'data' => [
+                    'request_id' => $requestId,
+                    'partnerName' => $this->partnerUserName,
+                    'provider' => $params['provider'],
+                    'amount' => $params['amount'],
+                    'quantity' => $params['quantity'],
+                    'cards' => $listCards,
+                    //'response' => $response
+                ]
+            ];
+        } catch (\Exception $ex) {
+            return $this->getResponseServerError($ex->getMessage());
+        }
+    }
+
+    /**
+     * @param $requestId
+     * @return array
+     */
+    public function reDownloadSoftpin($requestId)
+    {
+        try {
+            $data = [
+                'requestId' => $requestId,
+                'partnerName' => $this->partnerUserName,
+                'sign' => $this->sign($this->partnerUserName)
+            ];
+
+            $response = $this->service->__soapCall("reDownloadSoftpin", $data);
+
+            if ($response->errorCode != 0) {
+                return $this->getResponseServiceError($response);
+            }
+
+            $listCards = $this->decrypt($response->listCards);
+            $listCards = json_decode($listCards);
+            $listCards = !empty($listCards->listCards) ? $listCards->listCards : [];
+            $listCards = $this->getCardInfo($listCards);
+
+            return [
+                'data' => [
+                    'request_id' => $requestId,
+                    'partnerName' => $this->partnerUserName,
+                    'cards' => $listCards
+                ]
+            ];
+        } catch (\Exception $ex) {
+            return $this->getResponseServerError($ex->getMessage());
+        }
+    }
+
+    /**
+     * @param $data
+     * @return false|string
+     * @throws \Exception
+     */
+    private function decrypt($data)
+    {
+        try {
+            return openssl_decrypt(base64_decode($data),
+                'DES-EDE3',
+                substr(md5($this->keySofpin), 0, 24),
+                OPENSSL_RAW_DATA
+            );
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage());
+        }
+    }
 
     /**
      * @param $requestId
@@ -171,6 +263,33 @@ class Service
         } catch (\Exception $ex) {
             return $this->getResponseServerError($ex->getMessage());
         }
+    }
+
+    /**
+     * @param array $listCards
+     * @return array
+     */
+    private function getCardInfo(array $listCards = [])
+    {
+        if (empty($listCards)) {
+            return [];
+        }
+
+        $data = [];
+
+        foreach ($listCards as $card) {
+            list($provider, $amount, $serial, $pin, $expiredAt) = explode('|', $card);
+
+            $data[] = [
+                'provider' => $provider,
+                'amount' => $amount,
+                'serial' => $serial,
+                'pin' => $pin,
+                'expired_at' => $expiredAt,
+            ];
+        }
+
+        return $data;
     }
 
     /**
