@@ -1,0 +1,37 @@
+{
+  "name": "onesite/vnpt-epay",
+  "description": "VNPT Epay",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "1Site.vn",
+      "email": "hotro@1site.vn",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "guzzlehttp/guzzle": "^6.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "OneSite\\VNPT\\EPay\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "OneSite\\VNPT\\EPay\\": [
+        "src",
+        "tests"
+      ]
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x.x-dev"
+    }
+  }
+}

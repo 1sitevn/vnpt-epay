@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="Application Test Suite">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <includePath>.</includePath>
+        <env name="VNPT_EPAY_WS_URL" value=""/>
+        <env name="VNPT_EPAY_PARTNER_USERNAME" value=""/>
+        <env name="VNPT_EPAY_PARTNER_PASSWORD" value=""/>
+        <env name="VNPT_EPAY_KEY_SOFPIN" value=""/>
+        <env name="VNPT_EPAY_PRIVATE_KEY_PATH" value=""/>
+        <env name="VNPT_EPAY_PRIVATE_KEY_PATH" value=""/>
+        <env name="VNPT_EPAY_PUBLIC_KEY_PATH" value=""/>
+    </php>
+</phpunit>
