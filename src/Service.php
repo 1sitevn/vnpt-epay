@@ -2,6 +2,8 @@
 
 namespace OneSite\VNPT\EPay;
 
+use Carbon\Carbon;
+
 /**
  * Class Service
  * @package OneSite\VNPT\EPay
@@ -285,7 +287,7 @@ class Service
                 'amount' => $amount,
                 'serial' => $serial,
                 'pin' => $pin,
-                'expired_at' => $expiredAt,
+                'expired_at' => Carbon::createFromFormat('H:i:s d/m/Y', $expiredAt)->format('Y-m-d H:i:s'),
             ];
         }
 
