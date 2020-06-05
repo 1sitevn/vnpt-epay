@@ -3,6 +3,7 @@
 namespace OneSite\VNPT\EPay;
 
 use Carbon\Carbon;
+use OneSite\Core\Security\RSA;
 
 /**
  * Class Service

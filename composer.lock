@@ -259,16 +259,16 @@
         },
         {
             "name": "onesite/core",
-            "version": "v1.0.0",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/1sitevn/core.git",
-                "reference": "11c0283761d1944a512d1b08274c796098dd10f2"
+                "reference": "3bd2ef705069a4840037fbabf12140cccea72245"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/1sitevn/core/zipball/11c0283761d1944a512d1b08274c796098dd10f2",
-                "reference": "11c0283761d1944a512d1b08274c796098dd10f2",
+                "url": "https://api.github.com/repos/1sitevn/core/zipball/3bd2ef705069a4840037fbabf12140cccea72245",
+                "reference": "3bd2ef705069a4840037fbabf12140cccea72245",
                 "shasum": ""
             },
             "require": {
@@ -303,7 +303,7 @@
                 }
             ],
             "description": "1Site Core",
-            "time": "2020-06-05T04:36:39+00:00"
+            "time": "2020-06-05T06:53:34+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
