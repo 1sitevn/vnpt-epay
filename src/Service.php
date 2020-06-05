@@ -53,12 +53,12 @@ class Service
      */
     public function __construct()
     {
-        $this->wsUrl = Config::get('vnpt.epay.ws_url');
-        $this->partnerUserName = Config::get('vnpt.epay.partner_username');
-        $this->partnerPassword = Config::get('vnpt.epay.partner_password');
-        $this->keySofpin = Config::get('vnpt.epay.key_sofpin');
-        $this->privateKeyPath = Config::get('vnpt.epay.private_key_path');
-        $this->publicKeyPath = Config::get('vnpt.epay.public_key_path');
+        $this->wsUrl = config('vnpt.epay.ws_url');
+        $this->partnerUserName = config('vnpt.epay.partner_username');
+        $this->partnerPassword = config('vnpt.epay.partner_password');
+        $this->keySofpin = config('vnpt.epay.key_sofpin');
+        $this->privateKeyPath = config('vnpt.epay.private_key_path');
+        $this->publicKeyPath = config('vnpt.epay.public_key_path');
 
         $this->service = new \SoapClient($this->wsUrl);
     }

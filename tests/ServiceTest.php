@@ -3,11 +3,8 @@
 
 namespace OneSite\VNPT\EPay;
 
-
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
-require_once "helpers.php";
 
 /**
  * Class ServiceTest

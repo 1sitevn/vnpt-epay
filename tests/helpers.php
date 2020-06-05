@@ -8,34 +8,12 @@ if (!function_exists('config')) {
      */
     function config($key, $default = null)
     {
-        $configs = [
-            'vnpt' => [
-                'epay' => [
-                    'ws_url' => env('VNPT_EPAY_WS_URL', null),
-                    'partner_username' => env('VNPT_EPAY_PARTNER_USERNAME', null),
-                    'partner_password' => env('VNPT_EPAY_PARTNER_PASSWORD', null),
-                    'key_sofpin' => env('VNPT_EPAY_KEY_SOFPIN', null),
-                    'private_key_path' => env('VNPT_EPAY_PRIVATE_KEY_PATH', null),
-                    'public_key_path' => env('VNPT_EPAY_PUBLIC_KEY_PATH', null),
-                ]
-            ]
-        ];
+        /**
+         * @var \OneSite\Core\Builder\Config $config
+         */
+        $config = \OneSite\Core\Builder\Config::getInstance()->getConfigs();
 
-        $data = $configs;
-
-        $keys = explode('.', $key);
-
-        foreach ($keys as $_key) {
-            if (isset($data[$_key])) {
-                $data = $data[$_key];
-
-                continue;
-            }
-
-            return $default;
-        }
-
-        return $data;
+        return $config->get($key, $default);
     }
 }
 
@@ -48,5 +26,27 @@ if (!function_exists('env')) {
     function env($key, $default = null)
     {
         return !empty($_ENV[$key]) ? $_ENV[$key] : $default;
+    }
+}
+
+if (!function_exists('storage_path')) {
+    /**
+     * @param string $path
+     * @return string
+     */
+    function storage_path($path = "")
+    {
+        return realpath("storage/" . $path);
+    }
+}
+
+if (!function_exists('base_path')) {
+    /**
+     * @param string $path
+     * @return string
+     */
+    function base_path($path = "")
+    {
+        return realpath($path);
     }
 }
