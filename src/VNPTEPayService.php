@@ -5,13 +5,20 @@ namespace OneSite\VNPT\EPay;
 use Carbon\Carbon;
 use OneSite\Core\Security\RSA;
 
+
 /**
- * Class Service
+ * Class VNPTEPayService
  * @package OneSite\VNPT\EPay
  */
-class Service
+class VNPTEPayService
 {
+    /**
+     *
+     */
     const TYPE_TOPUP = 1;
+    /**
+     *
+     */
     const TYPE_DOWNLOAD_SOFTPIN = 2;
 
     /**
@@ -99,7 +106,8 @@ class Service
     public function topup(array $params = [])
     {
         try {
-            $requestId = $this->partnerUserName . '_' . time() . rand(000, 999);
+            $requestId = !empty($params['request_id']) ? $params['request_id'] : null;
+            $requestId = $this->rebuildRequestId($requestId);
 
             $data = [
                 'requestId' => $requestId,
@@ -123,7 +131,7 @@ class Service
 
             return [
                 'data' => [
-                    'request_id' => $requestId,
+                    'request_id' => $this->getRequestIdFromResponse($requestId),
                     'partner_name' => $this->partnerUserName,
                     'provider' => $params['provider'],
                     'account' => $params['account'],
@@ -142,7 +150,8 @@ class Service
     public function downloadSoftpin(array $params = [])
     {
         try {
-            $requestId = $this->partnerUserName . '_' . time() . rand(000, 999);
+            $requestId = !empty($params['request_id']) ? $params['request_id'] : null;
+            $requestId = $this->rebuildRequestId($requestId);
 
             $data = [
                 'requestId' => $requestId,
@@ -171,7 +180,7 @@ class Service
 
             return [
                 'data' => [
-                    'request_id' => $requestId,
+                    'request_id' => $this->getRequestIdFromResponse($requestId),
                     'partnerName' => $this->partnerUserName,
                     'provider' => $params['provider'],
                     'amount' => $params['amount'],
@@ -211,7 +220,7 @@ class Service
 
             return [
                 'data' => [
-                    'request_id' => $requestId,
+                    'request_id' => $this->getRequestIdFromResponse($requestId),
                     'partnerName' => $this->partnerUserName,
                     'cards' => $listCards
                 ]
@@ -247,6 +256,8 @@ class Service
     public function checkTrans($requestId, $type = 1)
     {
         try {
+            $requestId = $this->partnerUserName . '_' . $requestId;
+
             $data = [
                 'requestId' => $requestId,
                 'partnerName' => $this->partnerUserName,
@@ -336,4 +347,25 @@ class Service
         return base64_encode($binarySignature);
     }
 
+    /**
+     * @param null $requestId
+     * @return string
+     */
+    private function rebuildRequestId($requestId = null)
+    {
+        if (!empty($requestId)) {
+            return $this->partnerUserName . '_' . $requestId;
+        }
+
+        return $this->partnerUserName . '_' . uniqid();
+    }
+
+    /**
+     * @param $requestId
+     * @return string|string[]
+     */
+    private function getRequestIdFromResponse($requestId)
+    {
+        return str_replace($this->partnerUserName . '_', '', $requestId);
+    }
 }
