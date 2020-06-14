@@ -10,11 +10,11 @@ use PHPUnit\Framework\TestCase;
  * Class ServiceTest
  * @package OneSite\VNPT\EPay
  */
-class ServiceTest extends TestCase
+class VNPTEPayServiceTest extends TestCase
 {
 
     /**
-     * @var Service
+     * @var VNPTEPayService
      */
     private $service;
 
@@ -25,7 +25,7 @@ class ServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new Service();
+        $this->service = new VNPTEPayService();
     }
 
     /**
@@ -39,7 +39,7 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * PHPUnit test: vendor/bin/phpunit --filter testQueryBalance tests/ServiceTest.php
+     * PHPUnit test: vendor/bin/phpunit --filter testQueryBalance tests/VNPTEPayServiceTest.php
      */
     public function testQueryBalance()
     {
@@ -55,11 +55,12 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * PHPUnit test: vendor/bin/phpunit --filter testTopup tests/ServiceTest.php
+     * PHPUnit test: vendor/bin/phpunit --filter testTopup tests/VNPTEPayServiceTest.php
      */
     public function testTopup()
     {
         $response = $this->service->topup([
+            'request_id' => uniqid('9PAY_TEST'),
             'provider' => Provider::TYPE_VIETTEL,
             'account' => '01676696055',
             'amount' => 100000
@@ -75,11 +76,12 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * PHPUnit test: vendor/bin/phpunit --filter testDownloadSoftpin tests/ServiceTest.php
+     * PHPUnit test: vendor/bin/phpunit --filter testDownloadSoftpin tests/VNPTEPayServiceTest.php
      */
     public function testDownloadSoftpin()
     {
         $response = $this->service->downloadSoftpin([
+            'request_id' => uniqid('9PAY_TEST'),
             'provider' => Provider::TYPE_VIETTEL,
             'amount' => 10000,
             'quantity' => 2
@@ -95,7 +97,7 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * PHPUnit test: vendor/bin/phpunit --filter testReDownloadSoftpin tests/ServiceTest.php
+     * PHPUnit test: vendor/bin/phpunit --filter testReDownloadSoftpin tests/VNPTEPayServiceTest.php
      */
     public function testReDownloadSoftpin()
     {
@@ -111,11 +113,11 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * PHPUnit test: vendor/bin/phpunit --filter testCheckTransSuccess tests/ServiceTest.php
+     * PHPUnit test: vendor/bin/phpunit --filter testCheckTransSuccess tests/VNPTEPayServiceTest.php
      */
     public function testCheckTransSuccess()
     {
-        $response = $this->service->checkTrans('partnerTest_PHP_1591088750221', Service::TYPE_TOPUP);
+        $response = $this->service->checkTrans('9PAY_TEST5ee59b21ef15e', VNPTEPayService::TYPE_TOPUP);
 
         echo "\n" . json_encode($response);
 
@@ -127,11 +129,11 @@ class ServiceTest extends TestCase
     }
 
     /**
-     * PHPUnit test: vendor/bin/phpunit --filter testCheckTransFail tests/ServiceTest.php
+     * PHPUnit test: vendor/bin/phpunit --filter testCheckTransFail tests/VNPTEPayServiceTest.php
      */
     public function testCheckTransFail()
     {
-        $response = $this->service->checkTrans('partnerTest_PHP_191293241189', Service::TYPE_TOPUP);
+        $response = $this->service->checkTrans('partnerTest_PHP_191293241189', VNPTEPayService::TYPE_TOPUP);
 
         echo "\n" . json_encode($response);
 
