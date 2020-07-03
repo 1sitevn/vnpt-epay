@@ -51,11 +51,6 @@ class VNPTEPayService
     private $timeOut = 150;
 
     /**
-     * @var \SoapClient
-     */
-    private $service;
-
-    /**
      * Service constructor.
      * @throws \SoapFault
      */
@@ -271,7 +266,9 @@ class VNPTEPayService
                 'sign' => $this->sign($requestId . $this->partnerUserName . $type)
             ];
 
-            $response = $this->service->__soapCall("checkTrans", $data);
+            $service = new \SoapClient($this->wsUrl);
+
+            $response = $service->__soapCall("checkTrans", $data);
 
             if ($response->errorCode != 0) {
                 return $this->getResponseServiceError($response);
