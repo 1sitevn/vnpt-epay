@@ -67,8 +67,6 @@ class VNPTEPayService
         $this->keySofpin = config('vnpt.epay.key_sofpin');
         $this->privateKeyPath = config('vnpt.epay.private_key_path');
         $this->publicKeyPath = config('vnpt.epay.public_key_path');
-
-        $this->service = new \SoapClient($this->wsUrl);
     }
 
     /**
@@ -77,7 +75,9 @@ class VNPTEPayService
     public function queryBalance()
     {
         try {
-            $response = $this->service->__soapCall("queryBalance", [
+            $service = new \SoapClient($this->wsUrl);
+
+            $response = $service->__soapCall("queryBalance", [
                 'partnerName' => $this->partnerUserName,
                 'sign' => $this->sign($this->partnerUserName)
             ]);
@@ -123,7 +123,9 @@ class VNPTEPayService
                 )
             ];
 
-            $response = $this->service->__soapCall("topup", $data);
+            $service = new \SoapClient($this->wsUrl);
+
+            $response = $service->__soapCall("topup", $data);
 
             if ($response->errorCode != 0) {
                 return $this->getResponseServiceError($response);
@@ -167,7 +169,9 @@ class VNPTEPayService
                 )
             ];
 
-            $response = $this->service->__soapCall("downloadSoftpin", $data);
+            $service = new \SoapClient($this->wsUrl);
+
+            $response = $service->__soapCall("downloadSoftpin", $data);
 
             if ($response->errorCode != 0) {
                 return $this->getResponseServiceError($response);
@@ -207,7 +211,9 @@ class VNPTEPayService
                 'sign' => $this->sign($this->partnerUserName)
             ];
 
-            $response = $this->service->__soapCall("reDownloadSoftpin", $data);
+            $service = new \SoapClient($this->wsUrl);
+
+            $response = $service->__soapCall("reDownloadSoftpin", $data);
 
             if ($response->errorCode != 0) {
                 return $this->getResponseServiceError($response);
