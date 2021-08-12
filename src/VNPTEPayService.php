@@ -275,7 +275,7 @@ class VNPTEPayService
             }
 
             return [
-                'data' => []
+                'data' => $response
             ];
         } catch (\Exception $ex) {
             return $this->getResponseServerError($ex->getMessage());
