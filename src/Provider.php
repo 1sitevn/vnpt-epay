@@ -24,4 +24,8 @@ class Provider
     const TYPE_APPOTA = 'APPOTA';
     const TYPE_BIT = 'BIT';
     const TYPE_SOHACOIN = 'SOHACOIN';
+
+    const TYPE_DATA_VIETTEL = 'VTTDATA';
+    const TYPE_DATA_MOBIFHONE = 'VMSDATA';
+    const TYPE_DATA_VINAPHONE = 'VNPDATA';
 }

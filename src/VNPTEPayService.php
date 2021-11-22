@@ -203,7 +203,7 @@ class VNPTEPayService
             $data = [
                 'requestId' => $requestId,
                 'partnerName' => $this->partnerUserName,
-                'sign' => $this->sign($this->partnerUserName)
+                'sign' => $this->sign($requestId.$this->partnerUserName)
             ];
 
             $service = new \SoapClient($this->wsUrl);

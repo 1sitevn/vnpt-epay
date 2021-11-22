@@ -61,10 +61,12 @@ class VNPTEPayServiceTest extends TestCase
     {
         $response = $this->service->topup([
             'request_id' => uniqid('9PAY_TEST'),
-            'provider' => Provider::TYPE_VIETTEL,
-            'account' => '01676696055',
-            'amount' => 100000
+            'provider' => Provider::TYPE_DATA_VINAPHONE,
+            'account' => '0888523111',
+            'amount' => 50000
         ]);
+
+        print_r($response);
 
         echo "\n" . json_encode($response);
 
@@ -82,7 +84,7 @@ class VNPTEPayServiceTest extends TestCase
     {
         $response = $this->service->downloadSoftpin([
             'request_id' => uniqid('9PAY_TEST'),
-            'provider' => Provider::TYPE_VIETTEL,
+            'provider' => Provider::TYPE_VINAGAME,
             'amount' => 10000,
             'quantity' => 2
         ]);
@@ -106,10 +108,10 @@ class VNPTEPayServiceTest extends TestCase
         echo "\n" . json_encode($response);
 
         if (isset($response['error'])) {
-            return $this->assertTrue(true);
+            return $this->assertTrue(false);
         }
 
-        return $this->assertTrue(false);
+        return $this->assertTrue(true);
     }
 
     /**
